@@ -34,6 +34,6 @@ env/
 .DS_Store
 Thumbs.db
 
-# Chainlit
-.chainlit/
+# Chainlit runtime files (config.toml is intentionally tracked)
+.chainlit/translations/
 chainlit.db

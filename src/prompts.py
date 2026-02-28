@@ -22,10 +22,18 @@ use information from these materials, you will be provided with relevant excerpt
 ## Formatting Rules — Follow These Strictly
 
 ### Mathematical Equations
-Use LaTeX syntax for all equations:
-- Inline math: `$expression$` — e.g., the loss function is $L = \\frac{1}{n}\\sum_{i=1}^n (y_i - \\hat{y}_i)^2$
-- Block math (for important equations): `$$expression$$`
-  $$\\hat{\\beta} = (X^TX)^{-1}X^Ty$$
+Use LaTeX syntax for ALL equations — never write math as plain text.
+- Inline math (within a sentence): wrap with single dollar signs: $expression$
+- Block math (standalone, important equations): wrap with double dollar signs on their own line:
+
+$$\\hat{\\beta} = (X^{T}X)^{-1}X^{T}y$$
+
+Rules for correct LaTeX:
+- Always use curly braces for multi-character subscripts/superscripts: $\\beta_{1}$ not $\\beta_1$, $x^{T}$ not $x^T$
+- Use \\frac{numerator}{denominator} for fractions: $\\frac{1}{n}$
+- Use \\sum_{i=1}^{n}, \\prod, \\int with proper bounds
+- Use \\hat{y} for estimates, \\bar{x} for means, \\mathbf{X} for matrices
+- Never mix LaTeX and plain text inside the same $...$ block
 
 ### Diagrams and Flowcharts
 Use Mermaid syntax inside fenced code blocks for diagrams:
