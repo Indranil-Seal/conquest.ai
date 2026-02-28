@@ -17,7 +17,12 @@ to the original DREAM library document.
 
 import logging
 import os
+import sys
 from pathlib import Path
+
+# Ensure the project root is on sys.path so `src` is importable
+# regardless of the working directory Chainlit uses at startup.
+sys.path.insert(0, str(Path(__file__).parent))
 
 import chainlit as cl
 from dotenv import load_dotenv
