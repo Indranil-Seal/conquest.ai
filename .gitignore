@@ -1,0 +1,39 @@
+# Environment variables
+.env
+
+# DREAM library (large binary files, clone separately)
+DREAM/
+
+# ChromaDB vector store (rebuilt via ingest.py)
+data/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Chainlit
+.chainlit/
+chainlit.db

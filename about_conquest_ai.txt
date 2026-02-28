@@ -1,0 +1,18 @@
+conquest.ai
+
+-What is conquest.ai ?
+conquest.ai is an AI powered chatbot who is a research assistant in the areas of Data Science, Machine Learning and AI. Users will interact with this chatbot learn about particular areas and topics related to Data Science, Machine Learning and AI. 
+
+-How will conquest.ai search of content ?
+conquest.ai will search for content using a pretrained LLM (a LLM who is trained on computational mathematics and is aware of topics in Data Science, Machine Learning and Ai) and conquest.ai can also refer to a library repository containing books and papers on relevant topic. This library is called DREAM (git clone https://github.com/Indranil-Seal/DREAM.git). conquest.ai can search the internet but right now that feature has been turned off. 
+
+-How would users interact with conquest.ai ?
+conquest.ai will come as an interactive chatbot that explains every topic in an easy to understand format and also provides equations, diagrams for explaining certain topics. 
+
+Instructions for claude
+- Ideate the architecture for conquest.ai. Save the architecture diagram on the README.md file with proper labelling. 
+- Start building conquest.ai, make sure the architecture enables fast response to users who are going to using it. 
+- Feel free to optimize and improvise. 
+- Every code and file should be well documented. 
+
+
