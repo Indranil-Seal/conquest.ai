@@ -82,8 +82,36 @@ async def on_chat_start():
         ).send()
         return
 
+    # Validate API key before building the query engine
+    if not os.getenv("ANTHROPIC_API_KEY"):
+        await cl.Message(
+            content=(
+                "**Anthropic API key not found.**\n\n"
+                "Please create a `.env` file in the project root:\n\n"
+                "```bash\n"
+                "cp .env.example .env\n"
+                "```\n\n"
+                "Then open `.env` and set your key:\n\n"
+                "```\n"
+                "ANTHROPIC_API_KEY=your_key_here\n"
+                "```\n\n"
+                "Get your key at [console.anthropic.com](https://console.anthropic.com). "
+                "Restart the app after saving."
+            ),
+            author="conquest.ai",
+        ).send()
+        return
+
     # Build query engine and store in session
-    query_engine = build_query_engine(index)
+    try:
+        query_engine = build_query_engine(index)
+    except Exception as e:
+        await cl.Message(
+            content=f"**Failed to initialize the query engine.**\n\n```\n{e}\n```",
+            author="conquest.ai",
+        ).send()
+        return
+
     cl.user_session.set(QUERY_ENGINE_KEY, query_engine)
 
     await cl.Message(
