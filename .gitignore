@@ -1,8 +1,9 @@
 # Environment variables
 .env
 
-# Project spec (internal, not for public repo)
+# Internal project docs (not for public repo)
 about_conquest_ai.txt
+architecture.txt
 
 # DREAM library (large binary files, clone separately)
 DREAM/
