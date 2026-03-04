@@ -268,6 +268,130 @@ def build_index(
     return index
 
 
+def remove_documents_from_index(
+    chroma_db_path: Path,
+    filenames: list[str],
+) -> int:
+    """
+    Remove all chunks belonging to the given filenames from ChromaDB.
+
+    Called when ingest.py detects that documents were deleted or modified
+    in the DREAM library. Modified documents are first removed here, then
+    re-indexed with fresh content by index_specific_documents().
+
+    Args:
+        chroma_db_path: Path to the ChromaDB persistent storage directory.
+        filenames: List of filenames (basename only) whose chunks should be deleted.
+
+    Returns:
+        Total number of chunks removed.
+    """
+    if not filenames:
+        return 0
+
+    chroma_client = chromadb.PersistentClient(path=str(chroma_db_path))
+    chroma_collection = chroma_client.get_or_create_collection(CHROMA_COLLECTION)
+
+    removed_count = 0
+    for filename in filenames:
+        # Retrieve IDs of all chunks that belong to this file
+        results = chroma_collection.get(
+            where={"filename": filename},
+            include=[],  # only IDs needed
+        )
+        if results["ids"]:
+            chroma_collection.delete(ids=results["ids"])
+            removed_count += len(results["ids"])
+            logger.info(f"  Removed {len(results['ids'])} chunks for: {filename}")
+        else:
+            logger.info(f"  No chunks found for: {filename} (skipping)")
+
+    return removed_count
+
+
+def index_specific_documents(
+    dream_path: Path,
+    chroma_db_path: Path,
+    file_paths: list[Path],
+) -> int:
+    """
+    Index only the specified document files into the existing ChromaDB collection.
+
+    Used for incremental updates when ingest.py detects new or modified files
+    in the DREAM library after a git pull. The collection is not cleared —
+    new chunks are appended alongside existing ones.
+
+    Args:
+        dream_path: Root of the DREAM repository (used to compute relative paths).
+        chroma_db_path: Path to the ChromaDB persistent storage directory.
+        file_paths: Absolute paths to the specific files to index.
+
+    Returns:
+        Number of documents successfully indexed.
+    """
+    if not file_paths:
+        return 0
+
+    embed_model = HuggingFaceEmbedding(model_name=EMBEDDING_MODEL)
+    Settings.embed_model = embed_model
+    Settings.llm = None
+
+    chroma_client = chromadb.PersistentClient(path=str(chroma_db_path))
+    chroma_collection = chroma_client.get_or_create_collection(CHROMA_COLLECTION)
+    vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
+    storage_context = StorageContext.from_defaults(vector_store=vector_store)
+
+    documents = []
+    for file_path in file_paths:
+        if not file_path.exists():
+            logger.warning(f"  File not found (skipping): {file_path.name}")
+            continue
+
+        ext = file_path.suffix.lower()
+        logger.info(f"  Indexing: {file_path.name}")
+
+        if ext == ".pdf":
+            text = load_pdf(file_path)
+        elif ext == ".epub":
+            text = load_epub(file_path)
+        elif ext == ".docx":
+            text = load_docx(file_path)
+        else:
+            continue
+
+        if not text.strip():
+            logger.warning(f"  Skipping {file_path.name} — no text extracted")
+            continue
+
+        documents.append(Document(
+            text=text,
+            metadata={
+                "filename": file_path.name,
+                "file_type": ext.lstrip("."),
+                "doc_type": classify_document(file_path.name),
+                "source": str(file_path.relative_to(dream_path)),
+            },
+            metadata_seperator="\n",
+            metadata_template="{key}: {value}",
+            text_template="File: {metadata_str}\n\n{content}",
+        ))
+
+    if not documents:
+        logger.warning("No documents were successfully loaded for incremental indexing.")
+        return 0
+
+    splitter = SentenceSplitter(chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP)
+    VectorStoreIndex.from_documents(
+        documents,
+        storage_context=storage_context,
+        transformations=[splitter],
+        show_progress=True,
+    )
+
+    logger.info(f"Incremental indexing complete. {len(documents)} document(s) added.")
+    return len(documents)
+
+
 def load_existing_index(chroma_db_path: Path) -> Optional[VectorStoreIndex]:
     """
     Load a pre-built ChromaDB index without re-indexing documents.
