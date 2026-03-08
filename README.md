@@ -9,11 +9,10 @@
 </p>
 
 <p align="center">
-  <!-- Visitor counter — increments on every README view -->
-  <a href="https://hits.seeyoufarm.com">
-    <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FIndranil-Seal%2Fconquest.ai&count_bg=%23D97706&title_bg=%23555555&icon=github.svg&icon_color=%23FFFFFF&title=visitors&edge_flat=false" alt="Visitor Count"/>
+  <!-- Clone count — updated daily by GitHub Actions via Traffic API -->
+  <a href="https://github.com/Indranil-Seal/conquest.ai">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/Indranil-Seal/conquest.ai/master/stats/clones.json" alt="Clone Count"/>
   </a>
-  <!-- GitHub stats badges -->
   <a href="https://github.com/Indranil-Seal/conquest.ai/stargazers">
     <img src="https://img.shields.io/github/stars/Indranil-Seal/conquest.ai?style=flat&logo=github&label=stars&color=D97706" alt="Stars"/>
   </a>
@@ -37,20 +36,6 @@
 ---
 
 conquest.ai combines **Claude Sonnet 4.6** with **Retrieval-Augmented Generation** over the DREAM library — a curated collection of DS/ML/AI textbooks and research papers — to give rigorous, two-part answers with LaTeX equations, Mermaid diagrams, and conversation memory.
-
-## 📊 Repository Activity
-
-| Metric | Details |
-|--------|---------|
-| 👁️ Page views & 📥 Clone counts | [View dashboard →](stats/activity.md) (updated daily) |
-| 🍴 Recent forks with usernames | [View dashboard →](stats/activity.md#-recent-forks) |
-| ⭐ Recent stargazers | [View dashboard →](stats/activity.md#-recent-stargazers) |
-
-> The activity dashboard is auto-updated every day at midnight UTC by a GitHub Action.
-> Fork and star usernames are trackable because they are public GitHub events.
-> Page view and clone usernames cannot be tracked — GitHub's privacy architecture prevents this.
-
----
 
 ## Architecture
 

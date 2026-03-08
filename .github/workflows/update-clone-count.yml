@@ -1,0 +1,51 @@
+name: Update Clone Count Badge
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # Daily at 00:00 UTC
+  workflow_dispatch:        # Manual trigger from Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  update-clone-count:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch clone count and write badge JSON
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Fetch 14-day clone data from GitHub Traffic API
+          RESPONSE=$(curl -s \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/Indranil-Seal/conquest.ai/traffic/clones)
+
+          TOTAL=$(echo "$RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('count', 0))")
+          UNIQUE=$(echo "$RESPONSE" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('uniques', 0))")
+
+          mkdir -p stats
+          # Write shields.io endpoint badge JSON
+          cat > stats/clones.json << EOF
+          {
+            "schemaVersion": 1,
+            "label": "clones (14d)",
+            "message": "${TOTAL} total · ${UNIQUE} unique",
+            "color": "6366F1",
+            "namedLogo": "github"
+          }
+          EOF
+
+          echo "Clone count: $TOTAL total, $UNIQUE unique"
+
+      - name: Commit updated badge data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add stats/clones.json
+          git diff --staged --quiet || git commit -m "chore: update clone count badge [skip ci]"
+          git push
