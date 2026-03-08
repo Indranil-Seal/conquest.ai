@@ -1,15 +1,54 @@
-# conquest.ai
+<p align="center">
+  <img src="logo/brand_logo1.png" alt="conquest.ai" width="340"/>
+</p>
 
-> AI-powered research assistant for Data Science, Machine Learning, and AI
+<h1 align="center">conquest.ai</h1>
 
-![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
-![Chainlit](https://img.shields.io/badge/UI-Chainlit-FF4B4B?logo=chainlink&logoColor=white)
-![Claude](https://img.shields.io/badge/LLM-Claude%20Sonnet%204.6-D97706?logo=anthropic&logoColor=white)
-![LlamaIndex](https://img.shields.io/badge/RAG-LlamaIndex-6366F1?logo=llama&logoColor=white)
-![ChromaDB](https://img.shields.io/badge/VectorDB-ChromaDB-FF6F00?logo=databricks&logoColor=white)
-![HuggingFace](https://img.shields.io/badge/Embeddings-HuggingFace-FFD21E?logo=huggingface&logoColor=black)
+<p align="center">
+  <em>AI-powered research assistant for Data Science, Machine Learning, and AI</em>
+</p>
+
+<p align="center">
+  <!-- Visitor counter — increments on every README view -->
+  <a href="https://hits.seeyoufarm.com">
+    <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FIndranil-Seal%2Fconquest.ai&count_bg=%23D97706&title_bg=%23555555&icon=github.svg&icon_color=%23FFFFFF&title=visitors&edge_flat=false" alt="Visitor Count"/>
+  </a>
+  <!-- GitHub stats badges -->
+  <a href="https://github.com/Indranil-Seal/conquest.ai/stargazers">
+    <img src="https://img.shields.io/github/stars/Indranil-Seal/conquest.ai?style=flat&logo=github&label=stars&color=D97706" alt="Stars"/>
+  </a>
+  <a href="https://github.com/Indranil-Seal/conquest.ai/forks">
+    <img src="https://img.shields.io/github/forks/Indranil-Seal/conquest.ai?style=flat&logo=github&label=forks&color=6366F1" alt="Forks"/>
+  </a>
+  <a href="https://github.com/Indranil-Seal/conquest.ai/watchers">
+    <img src="https://img.shields.io/github/watchers/Indranil-Seal/conquest.ai?style=flat&logo=github&label=watchers&color=3776AB" alt="Watchers"/>
+  </a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white" alt="Python"/>
+  <img src="https://img.shields.io/badge/UI-Chainlit-FF4B4B?logo=chainlink&logoColor=white" alt="Chainlit"/>
+  <img src="https://img.shields.io/badge/LLM-Claude%20Sonnet%204.6-D97706?logo=anthropic&logoColor=white" alt="Claude"/>
+  <img src="https://img.shields.io/badge/RAG-LlamaIndex-6366F1?logoColor=white" alt="LlamaIndex"/>
+  <img src="https://img.shields.io/badge/VectorDB-ChromaDB-FF6F00?logo=databricks&logoColor=white" alt="ChromaDB"/>
+  <img src="https://img.shields.io/badge/Embeddings-HuggingFace-FFD21E?logo=huggingface&logoColor=black" alt="HuggingFace"/>
+</p>
+
+---
 
 conquest.ai combines **Claude Sonnet 4.6** with **Retrieval-Augmented Generation** over the DREAM library — a curated collection of DS/ML/AI textbooks and research papers — to give rigorous, two-part answers with LaTeX equations, Mermaid diagrams, and conversation memory.
+
+## 📊 Repository Activity
+
+| Metric | Details |
+|--------|---------|
+| 👁️ Page views & 📥 Clone counts | [View dashboard →](stats/activity.md) (updated daily) |
+| 🍴 Recent forks with usernames | [View dashboard →](stats/activity.md#-recent-forks) |
+| ⭐ Recent stargazers | [View dashboard →](stats/activity.md#-recent-stargazers) |
+
+> The activity dashboard is auto-updated every day at midnight UTC by a GitHub Action.
+> Fork and star usernames are trackable because they are public GitHub events.
+> Page view and clone usernames cannot be tracked — GitHub's privacy architecture prevents this.
 
 ---
 
