@@ -40,75 +40,71 @@ conquest.ai combines **Claude Sonnet 4.6** with **Retrieval-Augmented Generation
 ## Architecture
 
 ```mermaid
-flowchart TD
-    User(["👤 User\n(Browser)"])
+flowchart LR
+    User(["👤 User"])
 
-    subgraph UI ["🖥️ Chainlit UI Layer"]
-        Chat["💬 Chat Interface\n(Streaming)"]
-        LaTeX["∑ LaTeX Equations\n(MathJax 3)"]
-        Mermaid["📊 Mermaid Diagrams"]
+    subgraph UI ["Chainlit — Chat UI"]
+        Chat["💬 Chat Interface"]
+        Render["∑ LaTeX  ·  📊 Mermaid  ·  Streaming"]
     end
 
-    subgraph RAG ["🧠 RAG Orchestration — LlamaIndex"]
-        Memory["🗄️ ChatMemoryBuffer\n(Conversation History)"]
-        Condense["🔀 Query Condenser\n(Reverse Prompt Injection)"]
-        Retriever["🔍 VectorIndexRetriever\ntop-k = 5"]
-        Synthesizer["⚙️ Response Synthesizer\n(compact mode)"]
+    subgraph Engine ["LlamaIndex — RAG Engine"]
+        Memory["🗄️ Chat Memory Buffer"]
+        Condenser["🔀 Query Condenser"]
+        Retriever["🔍 Vector Retriever  top-k = 5"]
+        Synth["⚙️ Response Synthesizer"]
     end
 
-    subgraph LLM ["🤖 LLM — Anthropic"]
-        Claude["✦ Claude Sonnet 4.6\nStreaming · max 4096 tokens"]
+    subgraph VecStore ["ChromaDB — Local Vector Store"]
+        Embed["🔢 all-MiniLM-L6-v2  Embeddings"]
+        Chunks["🗂️ 512-token Chunks  ·  50-token overlap"]
     end
 
-    subgraph VDB ["📦 Vector Store — ChromaDB (local)"]
-        Chunks["🗂️ ~50 Documents\nChunked · 512 tokens · overlap 50"]
-        Embed["🔢 Embeddings\nall-MiniLM-L6-v2 (local)"]
+    Claude(["✦ Claude Sonnet 4.6  —  Anthropic API"])
+
+    subgraph Library ["DREAM Library — Knowledge Base"]
+        Docs["📚 ~50 Docs   PDF · EPUB · DOCX"]
+        Ingest["⚙️ ingest.py   git sync + parse"]
     end
 
-    subgraph DREAM ["📚 DREAM Library (Git)"]
-        PDFs["📄 ~48 PDFs\nTextbooks & Papers"]
-        EPUB["📖 1 EPUB"]
-        DOCX["📝 1 DOCX"]
-    end
-
-    User -->|"message"| Chat
-    Chat -->|"query + history"| Memory
-    Memory -->|"history + query"| Condense
-    Condense -->|"condensed query"| Retriever
-    Retriever -->|"similarity search"| Chunks
-    Chunks --> Synthesizer
-    Memory -->|"chat history"| Synthesizer
-    Synthesizer -->|"prompt"| Claude
-    Claude -->|"token stream"| Chat
-    Chat -->|"rendered response"| User
-    LaTeX -.->|"renders"| Chat
-    Mermaid -.->|"renders"| Chat
-    Embed -->|"indexes"| Chunks
-    DREAM -->|"ingest.py\n(one-time)"| Embed
+    User              -->|"sends message"     | Chat
+    Chat              -->                       Memory
+    Memory            -->                       Condenser
+    Condenser         -->|"condensed query"   | Retriever
+    Retriever         -->|"cosine similarity" | Chunks
+    Chunks            -->                       Synth
+    Memory            -->|"conversation history"| Synth
+    Synth             -->|"assembled prompt"  | Claude
+    Claude            -->|"token stream"      | Chat
+    Chat              -->|"answer + citations"| User
+    Docs              -->                       Ingest
+    Ingest            -->                       Embed
+    Embed             -->                       Chunks
 ```
 
 ### Data Flow
 
 ```mermaid
 sequenceDiagram
-    participant U as 👤 User
-    participant C as 💬 Chainlit
-    participant M as 🗄️ Memory
-    participant Q as 🔀 Condenser
-    participant V as 📦 ChromaDB
-    participant L as ✦ Claude
+    participant U  as 👤 User
+    participant UI as 💬 Chainlit
+    participant M  as 🗄️ Memory
+    participant Q  as 🔀 Condenser
+    participant DB as 📦 ChromaDB
+    participant AI as ✦ Claude
 
-    U->>C: "How does learning rate affect gradient descent?"
-    C->>M: append user message
-    M->>Q: history + new message
-    Q->>L: condense into standalone query
-    L-->>Q: "How does learning rate affect gradient descent convergence?"
-    Q->>V: similarity search (top-5)
-    V-->>C: relevant chunks from DREAM library
-    C->>L: system prompt + chat history + context + query
-    L-->>C: stream tokens (Part 1 + Part 2)
-    C-->>U: rendered response + citations
-    C->>M: append assistant response
+    U  ->> UI : sends question
+    UI ->> M  : store user message
+    M  ->> Q  : history + new message
+    Q  ->> AI : rewrite as standalone query
+    AI -->> Q : condensed query
+    Q  ->> DB : embed + similarity search top-5
+    DB -->> UI : relevant document chunks
+    UI ->> AI : system prompt + history + chunks + query
+    AI -->> UI : stream Part 1 tokens
+    AI -->> UI : stream Part 2 tokens
+    UI -->> U  : rendered answer + citations
+    UI ->> M  : store assistant response
 ```
 
 ---
